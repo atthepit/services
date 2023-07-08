@@ -22,7 +22,7 @@ services:
       timeout: 3s
 
   app:
-    image: wallabag/wallabag:2.5.2
+    image: wallabag/wallabag:$WALLABAG_VERSION
     environment:
       - SYMFONY__ENV__DATABASE_DRIVER=$SYMFONY__ENV__DATABASE_DRIVER
       - SYMFONY__ENV__DATABASE_HOST=$SYMFONY__ENV__DATABASE_HOST

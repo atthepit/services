@@ -6,7 +6,7 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
     volumes:
-      - wallabag-db:/var/lib/mysql
+      - $BASEPATH/db/data:/var/lib/mysql
     restart: always
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -44,7 +44,7 @@ services:
     ports:
       - "8082:80"
     volumes:
-      - wallabag-app:/var/www/wallabag/web/assets/images
+      - $BASEPATH/app/images:/var/www/wallabag/web/assets/images
     restart: always
     depends_on:
       - db
@@ -61,6 +61,4 @@ services:
         ]
       interval: 1m
       timeout: 3s
-  volumes:
-    - wallabag-db
-    - wallabag-app
+

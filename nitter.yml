@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  cache:
+    image: redis:6-alpine
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - nitter-redis:/data
+    restart: unless-stopped
+    healthcheck:
+      test: redis-cli ping
+      interval: 30s
+      timeout: 5s
+      retries: 2
+  app:
+    image: zedeus/nitter:$NITTER_VERSION
+    ports:
+      - $NITTER_PORT:8080
+    volumes:
+      - $BASEPATH/nitter.conf:/src/nitter.conf:ro
+    depends_on:
+      - cache
+    restart: unless-stopped
+    healthcheck:
+      test: wget -nv --tries=1 --spider http://127.0.0.1:8080/Jack/status/20 || exit 1
+      interval: 30s
+      timeout: 5s
+      retries: 2
+
+volumes:
+  nitter-redis:

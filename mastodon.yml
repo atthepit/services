@@ -1,0 +1,47 @@
+---
+version: "2.1"
+services:
+  cache:
+    image: redis:alpine3.17
+    restart: unless-stopped
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=$DB_PASS
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_DB=$DB_NAME
+    volumes:
+      - $BASEPATH/db/data:/var/lib/postgresql/data
+  app:
+    image: lscr.io/linuxserver/mastodon:$MASTODON_VERSION
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=$DB_USER
+      - DB_NAME=$DB_NAME
+      - DB_PASS=$DB_PASS
+      - LOCAL_DOMAIN=$LOCAL_DOMAIN
+      - WEB_DOMAIN=$WEB_DOMAIN
+      - SECRET_KEY_BASE=$SECRET_KEY_BASE
+      - OTP_SECRET=$OTP_SECRET
+      - VAPID_PRIVATE_KEY=$VAPID_PRIVATE_KEY
+      - VAPID_PUBLIC_KEY=$VAPID_PUBLIC_KEY
+      - SMTP_SERVER=$SMTP_SERVER
+      - SMTP_PORT=$SMTP_PORT
+      - SMTP_LOGIN=$SMTP_LOGIN
+      - SMTP_PASSWORD=$SMTP_PASSWORD
+      - SMTP_FROM_ADDRESS=$SMTP_FROM_ADDRESS
+    volumes:
+      - $BASEPATH/app/config:/config
+    ports:
+      - $MASTODON_PORT:443
+    restart: unless-stopped
+    depends_on:
+      - cache
+      - db

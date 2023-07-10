@@ -19,7 +19,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Madrid
-      - REDIS_HOST=redis
+      - REDIS_HOST=cache
       - REDIS_PORT=6379
       - DB_HOST=db
       - DB_PORT=5432

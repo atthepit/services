@@ -30,6 +30,7 @@ services:
         check_tables: true
         admins: [$ADMIN_USERNAME]
         popular_enabled: true
+        hmac_key: $INVIDIOUS_HMAC_KEY
     healthcheck:
       test: wget -nv --tries=1 --spider http://127.0.0.1:3000/api/v1/comments/jNQXAC9IVRw || exit 1
       interval: 30s
